@@ -1,12 +1,13 @@
 package com.haulmont.testtask.entity;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Client {
-
-    private Long id;
+    String UUIDStr = UUID.randomUUID().toString();
+    private String id = UUIDStr;
     private String FIO;
-    private Long bankID;
+    private String bankID;
     private String phoneNumber;
     private String email;
     private String passport;
@@ -14,11 +15,11 @@ public class Client {
     public Client() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -30,11 +31,11 @@ public class Client {
         this.FIO = FIO;
     }
 
-    public Long getBankID() {
+    public String getBankID() {
         return bankID;
     }
 
-    public void setBankID(Long bankID) {
+    public void setBankID(String bankID) {
         this.bankID = bankID;
     }
 
