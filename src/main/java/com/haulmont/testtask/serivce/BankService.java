@@ -1,7 +1,7 @@
 package com.haulmont.testtask.serivce;
 
 import com.haulmont.testtask.Config;
-import com.haulmont.testtask.dao.CrudDAO;
+import com.haulmont.testtask.dao.BankDAO;
 
 import com.haulmont.testtask.entity.Bank;
 
@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BankService implements CrudDAO<Bank , String> {
+public class BankService implements BankDAO {
 
     private final Connection db;
 
@@ -63,8 +63,6 @@ public class BankService implements CrudDAO<Bank , String> {
                 bank.setId(rs.getString("ID"));
                 bank.setName(rs.getString("NAME"));
 
-            } else {
-                throw new IllegalArgumentException(Bank.class.getSimpleName() + " Error: findById");
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -78,8 +76,6 @@ public class BankService implements CrudDAO<Bank , String> {
             }
         }
         return bank;
-
-
     }
 
     @Override

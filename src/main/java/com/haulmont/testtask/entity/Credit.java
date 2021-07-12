@@ -1,30 +1,44 @@
 package com.haulmont.testtask.entity;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Credit {
+    String UUIDStr = UUID.randomUUID().toString();
+    private String id = UUIDStr;
 
-    private Long id;
-    private Long bankID;
+
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    private String name;
+    private String bankID;
     private float limit;
     private float interestRate;
 
     public Credit() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getBankID() {
+    public String getBankID() {
         return bankID;
     }
 
-    public void setBankID(Long bankID) {
+
+    public void setBankID(String bankID) {
         this.bankID = bankID;
     }
 
@@ -49,22 +63,21 @@ public class Credit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Credit credit = (Credit) o;
-        return Float.compare(credit.limit, limit) == 0 &&
-                Float.compare(credit.interestRate, interestRate) == 0 &&
-                Objects.equals(id, credit.id) &&
-                Objects.equals(bankID, credit.bankID);
+        return Float.compare(credit.limit, limit) == 0 && Float.compare(credit.interestRate, interestRate) == 0 && Objects.equals(UUIDStr, credit.UUIDStr) && Objects.equals(id, credit.id) && Objects.equals(name, credit.name) && Objects.equals(bankID, credit.bankID);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, bankID, limit, interestRate);
+        return Objects.hash(UUIDStr, id, name, bankID, limit, interestRate);
     }
 
     @Override
     public String toString() {
         return "Credit{" +
-                "id=" + id +
-                ", bankID=" + bankID +
+                "UUIDStr='" + UUIDStr + '\'' +
+                ", id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", bankID='" + bankID + '\'' +
                 ", limit=" + limit +
                 ", interestRate=" + interestRate +
                 '}';

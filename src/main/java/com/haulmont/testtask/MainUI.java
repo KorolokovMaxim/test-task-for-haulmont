@@ -1,17 +1,13 @@
 package com.haulmont.testtask;
 
-import com.haulmont.testtask.entity.Bank;
-import com.haulmont.testtask.entity.Client;
-import com.haulmont.testtask.serivce.BankService;
-import com.haulmont.testtask.serivce.ClientService;
 import com.haulmont.testtask.view.BankView;
+import com.haulmont.testtask.view.ClientView;
 import com.vaadin.annotations.Theme;
+import com.vaadin.navigator.Navigator;
+import com.vaadin.navigator.ViewDisplay;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
-
-import java.sql.SQLException;
-
 
 
 @Theme(ValoTheme.THEME_NAME)
@@ -21,46 +17,52 @@ public class MainUI extends UI {
     protected void init(VaadinRequest request) {
 
 
-        BankService bs = new BankService(Config.getInstance());
-        ClientService cs = new ClientService(Config.getInstance());
+        String title = "Банки";
+        getPage().setTitle(title);
+
         VerticalLayout layout = new VerticalLayout();
         layout.setSizeFull();
-        layout.setMargin(true);
+        layout.setMargin(false);
+        layout.setSpacing(false);
 
-        try {
-            BankView bankView = new BankView(layout);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        HorizontalLayout headerLayout = new HorizontalLayout();
+        headerLayout.setHeight("56px");
+        headerLayout.setWidth("100%");
+        headerLayout.setMargin(false);
+        headerLayout.setSpacing(true);
 
-        for (Client e : cs.getAll()){
-            System.out.println(e);
-        }
+        Button bankButton = new Button("Банки", clickEvent -> getNavigator().navigateTo(BankView.NAME));
+        bankButton.setHeight("100%");
+        bankButton.addStyleName("borderless");
 
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
-
-        Client client = new Client();
-        client.setFIO("Хрущев Никита Сергеевич");
-        client.setBankID(bs.findById("f71040da-dfde-4939-a6d6-b66eb50946c1").getId());
-        client.setPhoneNumber("89371458754");
-        client.setEmail("chrusch@gmail.com");
-        client.setPassport("123332");
+        Button clientButton = new Button("Клиенты", clickEvent -> getNavigator().navigateTo(ClientView.NAME));
+        clientButton.setHeight("100%");
+        clientButton.addStyleName("borderless");
 
 
-        cs.createOne(client);
+        Label header = new Label("БАНКОКОМПАНИЯ");
+        header.setWidth(null);
+
+        headerLayout.addComponents(bankButton,clientButton ,  header);
+        headerLayout.setComponentAlignment(header, Alignment.MIDDLE_RIGHT);
+        headerLayout.setExpandRatio(header, 1f);
+
+        VerticalLayout viewLayout = new VerticalLayout();
+        viewLayout.setSizeFull();
+        viewLayout.setMargin(false);
+        viewLayout.setSpacing(true);
+
+        layout.addComponents(headerLayout, viewLayout);
+        layout.setExpandRatio(viewLayout, 1f);
+
+        ViewDisplay viewDisplay = new Navigator.ComponentContainerViewDisplay(viewLayout);
+        Navigator navigator = new Navigator(this, viewDisplay);
+        navigator.addView(BankView.NAME, new BankView());
+        navigator.addView(ClientView.NAME , new ClientView());
 
 
-        System.out.println();
-        System.out.println();
-        System.out.println();
+        headerLayout.setStyleName("header-layout");
 
-        for (Client e : cs.getAll()){
-            System.out.println(e);
-        }
-//        layout.addComponent(new Label("Main UI"));
 
         setContent(layout);
     }
