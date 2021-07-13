@@ -2,7 +2,6 @@ package com.haulmont.testtask.view;
 
 import com.haulmont.testtask.Config;
 
-import com.haulmont.testtask.entity.Bank;
 import com.haulmont.testtask.entity.Client;
 import com.haulmont.testtask.serivce.BankService;
 import com.haulmont.testtask.serivce.ClientService;
@@ -25,11 +24,6 @@ public class ClientView extends VerticalLayout implements View {
     private Button editBtn;
     private Button deleteBtn;
 
-    private TextField fio;
-    private TextField bankClient;
-    private TextField phoneNumber;
-    private TextField email;
-    private TextField passport;
 
     public ClientView(){
         buildView();

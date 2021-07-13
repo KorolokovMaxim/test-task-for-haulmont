@@ -20,8 +20,8 @@ create table CREDIT
     ID            uuid         not null primary key,
     NAME          varchar(255) not null,
     BANK_ID       uuid         not null ,
-    LIMIT         bigint       not null,
-    INTEREST_RATE bigint       not null,
+    LIMIT         varchar(255)       not null,
+    INTEREST_RATE varchar(255)       not null,
     constraint FK_CREDIT_BANK foreign key (BANK_ID) references BANK (ID) on delete cascade
 );
 
@@ -31,7 +31,7 @@ create table OFFER
     ID            uuid   not null primary key,
     CLIENT_ID     uuid   not null,
     CREDIT_ID     uuid   not null,
-    CREDIT_AMOUNT bigint not null,
+    CREDIT_AMOUNT varchar(255) not null,
     constraint FK_OFFER_CREDIT foreign key (CREDIT_ID) references CREDIT (ID) on delete cascade ,
     constraint FK_OFFER_CLIENT foreign key (CLIENT_ID) references CLIENT (ID) on delete cascade
 );

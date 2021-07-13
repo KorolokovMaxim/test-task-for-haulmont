@@ -4,23 +4,13 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Credit {
-    String UUIDStr = UUID.randomUUID().toString();
+
+    private String UUIDStr = UUID.randomUUID().toString();
     private String id = UUIDStr;
-
-
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     private String name;
     private String bankID;
-    private float limit;
-    private float interestRate;
+    private String limit;
+    private String interestRate;
 
     public Credit() {
     }
@@ -33,28 +23,35 @@ public class Credit {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getBankID() {
         return bankID;
     }
-
 
     public void setBankID(String bankID) {
         this.bankID = bankID;
     }
 
-    public float getLimit() {
+    public String getLimit() {
         return limit;
     }
 
-    public void setLimit(float limit) {
+    public void setLimit(String limit) {
         this.limit = limit;
     }
 
-    public float getInterestRate() {
+    public String getInterestRate() {
         return interestRate;
     }
 
-    public void setInterestRate(float interestRate) {
+    public void setInterestRate(String interestRate) {
         this.interestRate = interestRate;
     }
 
@@ -63,7 +60,7 @@ public class Credit {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Credit credit = (Credit) o;
-        return Float.compare(credit.limit, limit) == 0 && Float.compare(credit.interestRate, interestRate) == 0 && Objects.equals(UUIDStr, credit.UUIDStr) && Objects.equals(id, credit.id) && Objects.equals(name, credit.name) && Objects.equals(bankID, credit.bankID);
+        return Objects.equals(id, credit.id) && Objects.equals(name, credit.name) && Objects.equals(bankID, credit.bankID) && Objects.equals(limit, credit.limit) && Objects.equals(interestRate, credit.interestRate);
     }
 
     @Override
@@ -74,12 +71,11 @@ public class Credit {
     @Override
     public String toString() {
         return "Credit{" +
-                "UUIDStr='" + UUIDStr + '\'' +
-                ", id='" + id + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", bankID='" + bankID + '\'' +
-                ", limit=" + limit +
-                ", interestRate=" + interestRate +
+                ", limit='" + limit + '\'' +
+                ", interestRate='" + interestRate + '\'' +
                 '}';
     }
 }

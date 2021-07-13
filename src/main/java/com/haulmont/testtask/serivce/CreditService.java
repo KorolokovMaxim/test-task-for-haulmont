@@ -3,7 +3,6 @@ package com.haulmont.testtask.serivce;
 import com.haulmont.testtask.Config;
 import com.haulmont.testtask.dao.CreditDAO;
 import com.haulmont.testtask.entity.Bank;
-import com.haulmont.testtask.entity.Client;
 import com.haulmont.testtask.entity.Credit;
 
 import java.sql.*;
@@ -25,8 +24,8 @@ public class CreditService implements CreditDAO {
             ps.setString(1, credit.getId());
             ps.setString(2, credit.getName());
             ps.setString(3, credit.getBankID());
-            ps.setFloat(4, credit.getLimit());
-            ps.setFloat(5, credit.getInterestRate());
+            ps.setString(4, credit.getLimit());
+            ps.setString(5, credit.getInterestRate());
             if (ps.executeUpdate() != 1) {
                 throw new IllegalArgumentException(Credit.class.getSimpleName() + " Error: createOne");
             }
@@ -46,8 +45,8 @@ public class CreditService implements CreditDAO {
                 credit.setId(rs.getString("ID"));
                 credit.setName(rs.getString("NAME"));
                 credit.setBankID(rs.getString("BANK_ID"));
-                credit.setLimit(rs.getFloat("LIMIT"));
-                credit.setInterestRate(rs.getFloat("INTEREST_RATE"));
+                credit.setLimit(rs.getString("LIMIT"));
+                credit.setInterestRate(rs.getString("INTEREST_RATE"));
                 listOfCredit.add(credit);
             }
         } catch (SQLException e) {
@@ -60,7 +59,7 @@ public class CreditService implements CreditDAO {
     public Credit findById(String id) {
         ResultSet rs = null;
         Credit credit = new Credit();
-        String sql = "SELECT * FROM CLIENT WHERE id = ?";
+        String sql = "SELECT * FROM CREDIT WHERE id = ?";
         try (PreparedStatement pstmt = db.prepareStatement(sql)) {
             pstmt.setString(1, id);
             rs = pstmt.executeQuery();
@@ -68,11 +67,8 @@ public class CreditService implements CreditDAO {
                 credit.setId(rs.getString("ID"));
                 credit.setName(rs.getString("NAME"));
                 credit.setBankID(rs.getString("BANK_ID"));
-                credit.setLimit(rs.getFloat("LIMIT"));
-                credit.setInterestRate(rs.getFloat("INTEREST_RATE"));
-
-            } else {
-                throw new IllegalArgumentException(Credit.class.getSimpleName() + " Error: findById");
+                credit.setLimit(rs.getString("LIMIT"));
+                credit.setInterestRate(rs.getString("INTEREST_RATE"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -94,9 +90,9 @@ public class CreditService implements CreditDAO {
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             ps.setString(1, credit.getName());
             ps.setObject(2, credit.getBankID());
-            ps.setFloat(3, credit.getLimit());
-            ps.setFloat(4, credit.getInterestRate());
-            ps.setString(6, credit.getId());
+            ps.setString(3, credit.getLimit());
+            ps.setString(4, credit.getInterestRate());
+            ps.setString(5, credit.getId());
             if (ps.executeUpdate() != 1) {
                 throw new IllegalArgumentException(Credit.class.getSimpleName() + " Error: updateOne");
             }

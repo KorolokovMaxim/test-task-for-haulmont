@@ -4,7 +4,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class Client {
-    String UUIDStr = UUID.randomUUID().toString();
+    private String UUIDStr = UUID.randomUUID().toString();
     private String id = UUIDStr;
     private String FIO;
     private String bankID;

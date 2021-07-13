@@ -1,46 +1,48 @@
 package com.haulmont.testtask.entity;
 
 import java.util.Objects;
+import java.util.UUID;
 
 public class Offer {
 
-    private Long id;
-    private Long clientID;
-    private Long creditID;
-    private float creditAmount;
+    private String UUIDStr = UUID.randomUUID().toString();
+    private String id = UUIDStr;
+    private String clientID;
+    private String creditID;
+    private String creditAmount;
 
     public Offer() {
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getClientID() {
+    public String getClientID() {
         return clientID;
     }
 
-    public void setClientID(Long clientID) {
+    public void setClientID(String clientID) {
         this.clientID = clientID;
     }
 
-    public Long getCreditID() {
+    public String getCreditID() {
         return creditID;
     }
 
-    public void setCreditID(Long creditID) {
+    public void setCreditID(String creditID) {
         this.creditID = creditID;
     }
 
-    public float getCreditAmount() {
+    public String getCreditAmount() {
         return creditAmount;
     }
 
-    public void setCreditAmount(float creditAmount) {
+    public void setCreditAmount(String creditAmount) {
         this.creditAmount = creditAmount;
     }
 
@@ -49,10 +51,7 @@ public class Offer {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Offer offer = (Offer) o;
-        return Float.compare(offer.creditAmount, creditAmount) == 0 &&
-                Objects.equals(id, offer.id) &&
-                Objects.equals(clientID, offer.clientID) &&
-                Objects.equals(creditID, offer.creditID);
+        return Objects.equals(id, offer.id) && Objects.equals(clientID, offer.clientID) && Objects.equals(creditID, offer.creditID) && Objects.equals(creditAmount, offer.creditAmount);
     }
 
     @Override
@@ -63,10 +62,10 @@ public class Offer {
     @Override
     public String toString() {
         return "Offer{" +
-                "id=" + id +
-                ", clientID=" + clientID +
-                ", creditID=" + creditID +
-                ", creditAmount=" + creditAmount +
+                "id='" + id + '\'' +
+                ", clientID='" + clientID + '\'' +
+                ", creditID='" + creditID + '\'' +
+                ", creditAmount='" + creditAmount + '\'' +
                 '}';
     }
 }

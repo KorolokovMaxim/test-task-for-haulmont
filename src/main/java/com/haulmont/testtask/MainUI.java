@@ -2,6 +2,8 @@ package com.haulmont.testtask;
 
 import com.haulmont.testtask.view.BankView;
 import com.haulmont.testtask.view.ClientView;
+import com.haulmont.testtask.view.CreditView;
+import com.haulmont.testtask.view.OfferView;
 import com.vaadin.annotations.Theme;
 import com.vaadin.navigator.Navigator;
 import com.vaadin.navigator.ViewDisplay;
@@ -39,11 +41,18 @@ public class MainUI extends UI {
         clientButton.setHeight("100%");
         clientButton.addStyleName("borderless");
 
+        Button creditButton = new Button("Кредиты", clickEvent -> getNavigator().navigateTo(CreditView.NAME));
+        creditButton.setHeight("100%");
+        creditButton.addStyleName("borderless");
+
+        Button offerButton = new Button("Предложение", clickEvent -> getNavigator().navigateTo(OfferView.NAME));
+        offerButton.setHeight("100%");
+        offerButton.addStyleName("borderless");
 
         Label header = new Label("БАНКОКОМПАНИЯ");
         header.setWidth(null);
 
-        headerLayout.addComponents(bankButton,clientButton ,  header);
+        headerLayout.addComponents(bankButton, clientButton, creditButton, offerButton, header);
         headerLayout.setComponentAlignment(header, Alignment.MIDDLE_RIGHT);
         headerLayout.setExpandRatio(header, 1f);
 
@@ -58,7 +67,9 @@ public class MainUI extends UI {
         ViewDisplay viewDisplay = new Navigator.ComponentContainerViewDisplay(viewLayout);
         Navigator navigator = new Navigator(this, viewDisplay);
         navigator.addView(BankView.NAME, new BankView());
-        navigator.addView(ClientView.NAME , new ClientView());
+        navigator.addView(ClientView.NAME, new ClientView());
+        navigator.addView(CreditView.NAME, new CreditView());
+        navigator.addView(OfferView.NAME , new OfferView());
 
 
         headerLayout.setStyleName("header-layout");

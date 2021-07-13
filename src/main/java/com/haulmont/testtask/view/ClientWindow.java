@@ -72,7 +72,6 @@ public class ClientWindow extends Window {
         bankComboBox.setPlaceholder("Выберите банк");
         bankComboBox.setWidth("100%");
         binder.forField(bankComboBox)
-                .asRequired()
                 .bind(Client::getBankID, Client::setBankID);
 
         phoneNumber = new TextField("Номер телефона");
@@ -130,12 +129,8 @@ public class ClientWindow extends Window {
             for (Bank bank : bs.getAll()){
                 banksId.add(bank.getId());
             }
-
             bankComboBox.setItems(banksId);
             bankComboBox.setItemCaptionGenerator(s -> bs.findById(s).getName());
-
-
-
         }catch (Exception e){
             e.printStackTrace();
         }

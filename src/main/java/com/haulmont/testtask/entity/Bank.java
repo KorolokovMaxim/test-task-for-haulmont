@@ -5,7 +5,7 @@ import java.util.UUID;
 
 public class Bank {
 
-    String UUIDStr = UUID.randomUUID().toString();
+    private String UUIDStr = UUID.randomUUID().toString();
 
     private String id = UUIDStr;
     private String name;
