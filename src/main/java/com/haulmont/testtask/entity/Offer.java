@@ -1,5 +1,6 @@
 package com.haulmont.testtask.entity;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,6 +11,17 @@ public class Offer {
     private String clientID;
     private String creditID;
     private String creditAmount;
+    private Date date;
+    private String creditMonthValue;
+    private String paymentBody;
+
+    public String getPaymentBody() {
+        return paymentBody;
+    }
+
+    public void setPaymentBody(String paymentBody) {
+        this.paymentBody = paymentBody;
+    }
 
     public Offer() {
     }
@@ -46,17 +58,33 @@ public class Offer {
         this.creditAmount = creditAmount;
     }
 
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getCreditMonthValue() {
+        return creditMonthValue;
+    }
+
+    public void setCreditMonthValue(String creditMonthValue) {
+        this.creditMonthValue = creditMonthValue;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Offer offer = (Offer) o;
-        return Objects.equals(id, offer.id) && Objects.equals(clientID, offer.clientID) && Objects.equals(creditID, offer.creditID) && Objects.equals(creditAmount, offer.creditAmount);
+        return Objects.equals(UUIDStr, offer.UUIDStr) && Objects.equals(id, offer.id) && Objects.equals(clientID, offer.clientID) && Objects.equals(creditID, offer.creditID) && Objects.equals(creditAmount, offer.creditAmount) && Objects.equals(date, offer.date) && Objects.equals(creditMonthValue, offer.creditMonthValue);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, clientID, creditID, creditAmount);
+        return Objects.hash(UUIDStr, id, clientID, creditID, creditAmount, date, creditMonthValue);
     }
 
     @Override
@@ -66,6 +94,8 @@ public class Offer {
                 ", clientID='" + clientID + '\'' +
                 ", creditID='" + creditID + '\'' +
                 ", creditAmount='" + creditAmount + '\'' +
+                ", date=" + date +
+                ", creditMonthValue='" + creditMonthValue + '\'' +
                 '}';
     }
 }

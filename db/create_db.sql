@@ -32,6 +32,9 @@ create table OFFER
     CLIENT_ID     uuid   not null,
     CREDIT_ID     uuid   not null,
     CREDIT_AMOUNT varchar(255) not null,
+    DATE_IN_OFFER DATE not null,
+    CREDIT_MONTH_VALUE varchar(255) not null,
+    PAYMANT_BODY_MOUNTH varchar(255) not null,
     constraint FK_OFFER_CREDIT foreign key (CREDIT_ID) references CREDIT (ID) on delete cascade ,
     constraint FK_OFFER_CLIENT foreign key (CLIENT_ID) references CLIENT (ID) on delete cascade
 );

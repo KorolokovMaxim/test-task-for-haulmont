@@ -6,6 +6,7 @@ import com.haulmont.testtask.entity.Credit;
 import com.haulmont.testtask.serivce.BankService;
 import com.haulmont.testtask.serivce.CreditService;
 import com.vaadin.data.Binder;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.*;
 
 import java.util.ArrayList;
@@ -82,6 +83,8 @@ public class CreditWindow extends Window {
         limit.setRequiredIndicatorVisible(true);
         binder.forField(limit)
                 .withValidator(Objects::nonNull, "Укажите лимит по кредиту")
+                .withValidator(new RegexpValidator("Только цифры" , "[0-9]+"))
+                .withValidator(s -> !s.equals("0"), "Не может быть 0")
                 .asRequired()
                 .bind(Credit::getLimit, Credit::setLimit);
 
@@ -91,6 +94,7 @@ public class CreditWindow extends Window {
         interestRate.setRequiredIndicatorVisible(true);
         binder.forField(interestRate)
                 .withValidator(Objects::nonNull, "Укажите процентную ставку")
+                .withValidator(s -> !s.equals("0"), "Не может быть 0")
                 .asRequired()
                 .bind(Credit::getInterestRate, Credit::setInterestRate);
 

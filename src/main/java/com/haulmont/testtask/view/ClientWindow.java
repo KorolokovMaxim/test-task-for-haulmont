@@ -100,6 +100,8 @@ public class ClientWindow extends Window {
         passport.setRequiredIndicatorVisible(true);
         binder.forField(passport)
                 .withValidator(s -> s != null && !s.isEmpty(), "Введите номер паспорта" )
+                .withValidator(new RegexpValidator("Только цифры" , "[0-9]+"))
+                .withValidator(s -> !s.equals("0"), "Не может быть 0")
                 .asRequired()
                 .bind(Client::getPassport , Client::setPassport);
 

@@ -1,19 +1,22 @@
 package com.haulmont.testtask.view;
 
 import com.haulmont.testtask.Config;
-import com.haulmont.testtask.entity.Bank;
 import com.haulmont.testtask.entity.Client;
 import com.haulmont.testtask.entity.Credit;
 import com.haulmont.testtask.entity.Offer;
-import com.haulmont.testtask.serivce.BankService;
 import com.haulmont.testtask.serivce.ClientService;
 import com.haulmont.testtask.serivce.CreditService;
 import com.haulmont.testtask.serivce.OfferService;
 import com.vaadin.data.Binder;
+import com.vaadin.data.converter.LocalDateToDateConverter;
+import com.vaadin.data.validator.RegexpValidator;
 import com.vaadin.ui.*;
 
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 public class OfferWindow extends Window {
 
@@ -24,11 +27,13 @@ public class OfferWindow extends Window {
     private ComboBox<String> clientsComboBox;
     private ComboBox<String> creditsComboBox;
     private TextField creditAmount;
+    private DateField dateOffer;
+    private TextField creditForMonth;
+    private TextField paymentBody;
 
 
     ClientService clientService = new ClientService(Config.getInstance());
     CreditService creditService = new CreditService(Config.getInstance());
-    BankService bankService = new BankService(Config.getInstance());
 
     private Offer offer;
     private Binder<Offer> binder = new Binder<>(Offer.class);
@@ -87,10 +92,44 @@ public class OfferWindow extends Window {
         creditAmount.setRequiredIndicatorVisible(true);
         binder.forField(creditAmount)
                 .withValidator(s -> s != null && !s.isEmpty(), "Сумма кредит")
+                .withValidator(new RegexpValidator("Только цифры", "[0-9]+"))
+                .withValidator(s -> !s.equals("0"), "Не может быть 0")
                 .asRequired()
                 .bind(Offer::getCreditAmount, Offer::setCreditAmount);
 
-        formLayout.addComponents(clientsComboBox, creditsComboBox, creditAmount);
+        dateOffer = new DateField("Дата выдачи");
+        dateOffer.setDateFormat("dd.MM.yyyy");
+        dateOffer.setPlaceholder("Укажите срок выдачи");
+        binder.forField(dateOffer)
+                .withConverter(new LocalDateToDateConverter(ZoneId.systemDefault()))
+                .withValidator(Objects::nonNull, "Укажите дату выдачи")
+                .asRequired()
+                .bind(Offer::getDate, Offer::setDate);
+
+        creditForMonth = new TextField("Срок кредита");
+        creditForMonth.setMaxLength(8);
+        creditForMonth.setWidth("100%");
+        creditForMonth.setRequiredIndicatorVisible(true);
+        binder.forField(creditForMonth)
+                .withValidator(s -> s != null && !s.isEmpty(), "Срок выдачи кредита")
+                .withValidator(new RegexpValidator("Только цифры", "[0-9]+"))
+                .withValidator(s -> !s.equals("0"), "Не может быть 0")
+                .asRequired()
+                .bind(Offer::getCreditMonthValue, Offer::setCreditMonthValue);
+
+        paymentBody = new TextField("Сумма оплаты в месяц");
+        paymentBody.setMaxLength(8);
+        paymentBody.setWidth("100%");
+        paymentBody.setRequiredIndicatorVisible(true);
+        binder.forField(paymentBody)
+                .withValidator(s -> s != null && !s.isEmpty(), "Сумма не может быть пустой")
+                .withValidator(new RegexpValidator("Только цифры", "[0-9]+"))
+                .withValidator(s -> !s.equals("0"), "Не может быть 0")
+                .asRequired()
+                .bind(Offer::getPaymentBody, Offer::setPaymentBody);
+
+
+        formLayout.addComponents(clientsComboBox, creditsComboBox, creditAmount, dateOffer, creditForMonth , paymentBody);
 
         HorizontalLayout btnLayout = new HorizontalLayout();
         btnLayout.setSpacing(true);
@@ -129,7 +168,7 @@ public class OfferWindow extends Window {
                 creditId.add(credit.getId());
             }
             creditsComboBox.setItems(creditId);
-           creditsComboBox.setItemCaptionGenerator(s ->  creditService.findById(s).getName());
+            creditsComboBox.setItemCaptionGenerator(s -> creditService.findById(s).getName());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,26 +198,33 @@ public class OfferWindow extends Window {
                 offerToWrite.setClientID(clientsComboBox.getValue());
                 offerToWrite.setCreditID(creditsComboBox.getValue());
                 offerToWrite.setCreditAmount(creditAmount.getValue());
+                offerToWrite.setDate(Date.from(dateOffer.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
+                offerToWrite.setCreditMonthValue(creditForMonth.getValue());
+                offerToWrite.setPaymentBody(paymentBody.getValue());
                 OfferService offerService = new OfferService(Config.getInstance());
                 if (edit) {
-                    if(Double.parseDouble(creditAmount.getValue()) > Double.parseDouble(creditService.findById(creditsComboBox.getValue()).getLimit())){
+                    if (Double.parseDouble(creditAmount.getValue()) > Double.parseDouble(creditService.findById(creditsComboBox.getValue()).getLimit())
+                            || Double.parseDouble(creditAmount.getValue()) < Double.parseDouble(paymentBody.getValue())
+                    ) {
                         Notification.show("ОШИБКА",
-                                "Cумма выдаваемого кредита больше чем лимит по кредиту",
+                                "Cумма выдаваемого кредита больше чем лимит по кредиту" +
+                                        "или сумма ежемесячного платяжа больше чем сумма кредита",
                                 Notification.Type.WARNING_MESSAGE).setDelayMsec(5000);
-                    }else{
+                    } else {
                         offerService.updateOne(offer);
-                        System.out.println("Можно");
                     }
 
                 } else {
 
-                    if(Double.parseDouble(creditAmount.getValue()) > Double.parseDouble(creditService.findById(creditsComboBox.getValue()).getLimit())){
+                    if (Double.parseDouble(creditAmount.getValue()) > Double.parseDouble(creditService.findById(creditsComboBox.getValue()).getLimit())
+                    || Double.parseDouble(creditAmount.getValue()) < Double.parseDouble(paymentBody.getValue())
+                    ) {
                         Notification.show("ОШИБКА",
-                                "Cумма выдаваемого кредита больше чем лимит по кредиту",
+                                "Cумма выдаваемого кредита больше чем лимит по кредиту" +
+                                        "или сумма ежемесячного платяжа больше чем сумма кредита",
                                 Notification.Type.WARNING_MESSAGE).setDelayMsec(5000);
-                    }else{
+                    } else {
                         offerService.createOne(offerToWrite);
-                        System.out.println("Можно");
                     }
                 }
                 List<Offer> offers = offerService.getAll();
@@ -188,9 +234,6 @@ public class OfferWindow extends Window {
         });
         cancel.addClickListener(clickEvent -> close());
     }
-
-
-
 
 
 }

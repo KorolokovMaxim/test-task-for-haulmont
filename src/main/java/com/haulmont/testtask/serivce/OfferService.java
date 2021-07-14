@@ -21,12 +21,16 @@ public class OfferService implements OfferDAO {
     @Override
     public void createOne(Offer offer) {
 
-        String sql = "INSERT INTO OFFER (ID, CLIENT_ID, CREDIT_ID, CREDIT_AMOUNT) values (?, ?, ?, ?)";
+        String sql = "INSERT INTO OFFER (ID, CLIENT_ID, CREDIT_ID, CREDIT_AMOUNT, DATE_IN_OFFER, CREDIT_MONTH_VALUE, PAYMANT_BODY_MOUNTH) values (?, ?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             ps.setString(1, offer.getId());
             ps.setString(2, offer.getClientID());
             ps.setString(3, offer.getCreditID());
             ps.setString(4, offer.getCreditAmount());
+            Date createDate = null;
+            if (offer.getDate() != null) createDate = new Date(offer.getDate().getTime());
+            ps.setDate(5, createDate);
+            ps.setString(6, offer.getCreditMonthValue());
             if (ps.executeUpdate() != 1) {
                 throw new IllegalArgumentException(Offer.class.getSimpleName() + " Error: createOne");
             }
@@ -47,6 +51,9 @@ public class OfferService implements OfferDAO {
                 offer.setClientID(rs.getString("CLIENT_ID"));
                 offer.setCreditID(rs.getString("CREDIT_ID"));
                 offer.setCreditAmount(rs.getString("CREDIT_AMOUNT"));
+                offer.setDate(rs.getDate("DATE_IN_OFFER"));
+                offer.setCreditMonthValue(rs.getString("CREDIT_MONTH_VALUE"));
+                offer.setPaymentBody(rs.getString("PAYMANT_BODY_MOUNTH"));
                 offerList.add(offer);
             }
         } catch (SQLException e) {
@@ -68,6 +75,9 @@ public class OfferService implements OfferDAO {
                 offer.setClientID(rs.getString("CLIENT_ID"));
                 offer.setCreditID(rs.getString("CREDIT_ID"));
                 offer.setCreditAmount(rs.getString("CREDIT_AMOUNT"));
+                offer.setDate(rs.getDate("DATE_IN_OFFER"));
+                offer.setCreditMonthValue("CREDIT_MONTH_VALUE");
+                offer.setPaymentBody("PAYMANT_BODY_MOUNTH");
             } else {
                 throw new IllegalArgumentException(Offer.class.getSimpleName() + " Error: findById");
             }
@@ -87,12 +97,17 @@ public class OfferService implements OfferDAO {
 
     @Override
     public void updateOne(Offer offer) {
-        String sql = "UPDATE OFFER SET CLIENT_ID = ?, CREDIT_ID = ?, CREDIT_AMOUNT = ? WHERE ID = ?";
+        String sql = "UPDATE OFFER SET CLIENT_ID = ?, CREDIT_ID = ?, CREDIT_AMOUNT = ?, DATE_IN_OFFER = ?, CREDIT_MONTH_VALUE = ?, PAYMANT_BODY_MOUNTH = ? WHERE ID = ?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             ps.setString(1, offer.getClientID());
-            ps.setObject(2, offer.getCreditID());
+            ps.setString(2, offer.getCreditID());
             ps.setString(3, offer.getCreditAmount());
-            ps.setString(4, offer.getId());
+            Date updateDate = null;
+            if (offer.getDate() != null) updateDate = new Date(offer.getDate().getTime());
+            ps.setDate(4, updateDate);
+            ps.setString(5, offer.getCreditMonthValue());
+            ps.setString(6, offer.getPaymentBody());
+            ps.setString(7, offer.getId());
             if (ps.executeUpdate() != 1) {
                 throw new IllegalArgumentException(Offer.class.getSimpleName() + " Error: updateOne");
             }

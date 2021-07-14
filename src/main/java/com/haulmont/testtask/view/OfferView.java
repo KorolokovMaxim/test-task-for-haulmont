@@ -2,7 +2,7 @@ package com.haulmont.testtask.view;
 
 import com.haulmont.testtask.Config;
 import com.haulmont.testtask.entity.Offer;
-import com.haulmont.testtask.serivce.BankService;
+import com.haulmont.testtask.entity.Schedule;
 import com.haulmont.testtask.serivce.ClientService;
 import com.haulmont.testtask.serivce.CreditService;
 import com.haulmont.testtask.serivce.OfferService;
@@ -23,13 +23,13 @@ public class OfferView extends VerticalLayout implements View {
     CreditService creditService = new CreditService(Config.getInstance());
     ClientService clientService = new ClientService(Config.getInstance());
     OfferService offerService = new OfferService(Config.getInstance());
-    BankService bankService = new BankService(Config.getInstance());
 
     private Grid<Offer> offerGrid = new Grid<>(Offer.class);
 
     private Button addBtn;
     private Button editBtn;
     private Button deleteBtn;
+    private Button scheduleBtn;
 
 
     public OfferView() {
@@ -42,14 +42,18 @@ public class OfferView extends VerticalLayout implements View {
         offerGrid.addColumn(offer -> clientService.findById(offer.getClientID()).getFIO()).setCaption("Ф.И.О Клиента");
         offerGrid.addColumn(offer -> creditService.findById(offer.getCreditID()).getName()).setCaption("Название кредита");
         offerGrid.addColumn(Offer::getCreditAmount).setCaption("Сумма кредита");
+        offerGrid.addColumn(Offer::getDate).setCaption("Дата взятие кредита");
+        offerGrid.addColumn(Offer::getCreditMonthValue).setCaption("Срок кредита (в месяцах)");
+        offerGrid.addColumn(Offer::getPaymentBody).setCaption("Сумма платежа в месяц");
         offerGrid.setSizeFull();
 
         HorizontalLayout btnLayout = new HorizontalLayout();
         addBtn = new Button("ADD");
         editBtn = new Button("EDIT");
         deleteBtn = new Button("DELETE");
+        scheduleBtn = new Button("Посмотреть график платежей");
 
-        btnLayout.addComponents(addBtn, editBtn, deleteBtn);
+        btnLayout.addComponents(addBtn, editBtn, deleteBtn ,scheduleBtn);
         setMargin(true);
         setSpacing(true);
         setSizeFull();
@@ -74,6 +78,9 @@ public class OfferView extends VerticalLayout implements View {
 
         editBtn.addClickListener(clickEvent ->
                 getUI().addWindow(new OfferWindow(offerGrid, true)));
+
+        scheduleBtn.addClickListener(clickEvent ->
+                getUI().addWindow(new ScheduleWindow(offerGrid.asSingleSelect().getValue())));
 
         deleteBtn.addClickListener(clickEvent -> {
             if (!offerGrid.asSingleSelect().isEmpty()) {
