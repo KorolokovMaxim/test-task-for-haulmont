@@ -6,15 +6,16 @@ import com.haulmont.testtask.entity.Schedule;
 import com.haulmont.testtask.serivce.CreditService;
 import com.vaadin.ui.*;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.ZoneId;
+import java.util.*;
 
 public class ScheduleWindow extends Window {
 
     private Grid<Schedule> scheduleGrid = new Grid<>(Schedule.class);
     private Button cancel;
-    private Offer offer;
+    private static Offer offer;
     static CreditService cs = new CreditService(Config.getInstance());
 
 
@@ -28,8 +29,8 @@ public class ScheduleWindow extends Window {
     private void buildWindow() {
 
         setStyleName("modal-window");
-        setWidth("550px");
-        setHeight("440px");
+        setWidth("860px");
+        setHeight("100%");
         setModal(true);
         setResizable(false);
         center();
@@ -52,28 +53,26 @@ public class ScheduleWindow extends Window {
         Double percent = paymentBody * (getCreditPercent / 100);
         Double resultPayment = paymentBody + percent;
 
+
         List<Schedule> schedules = new ArrayList<>();
-        Schedule schedule = new Schedule();
 
-        for (int i = index, month = 0; i > 0; i--, month++) {
-
-            schedule.setDatePayment(LocalDate.now().plusMonths(month));
+        for (int i = 1; i < index + 1; i++) {
+            Schedule schedule = new Schedule();
+            schedule.setDatePayment(datePayment(offer.getDate() , i));
+            System.out.println(i);
+            System.out.println(offer.getDate().toString());
             schedule.setAmountPayment(resultPayment);
             schedule.setAmountPaymentBody(paymentBody);
             schedule.setAmountPaymentPercent(percent);
             schedules.add(schedule);
 
-
         }
 
 
 
-        scheduleGrid.addColumn(Schedule::getDatePayment).setCaption("Дата платежа");
-        scheduleGrid.addColumn(Schedule::getAmountPayment).setCaption("Сумма платежа");
-        scheduleGrid.addColumn(Schedule::getAmountPaymentBody).setCaption("Тело платежа");
-        scheduleGrid.addColumn(Schedule::getAmountPaymentPercent).setCaption("Процент платежа");
+        scheduleGrid.setItems(schedules);
+        scheduleGrid.setSizeFull();
 
-        scheduleGrid.setItems(schedule);
         HorizontalLayout btnLayout = new HorizontalLayout();
         btnLayout.setSpacing(true);
         cancel = new Button("CANCEL");
@@ -89,4 +88,23 @@ public class ScheduleWindow extends Window {
 
 
     }
+
+    private String datePayment(Date date , int i){
+        Calendar cal = GregorianCalendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+        Date currentMonth = date;
+        cal.setTime(currentMonth);
+
+        // current month
+        String currentMonthAsSting = df.format(cal.getTime());
+
+        // Add next month
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)+i);
+        String nextMonthAsString = df.format(cal.getTime());
+        return nextMonthAsString;
+    }
+
+
+
 }

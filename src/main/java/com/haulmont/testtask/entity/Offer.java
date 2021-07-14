@@ -15,13 +15,6 @@ public class Offer {
     private String creditMonthValue;
     private String paymentBody;
 
-    public String getPaymentBody() {
-        return paymentBody;
-    }
-
-    public void setPaymentBody(String paymentBody) {
-        this.paymentBody = paymentBody;
-    }
 
     public Offer() {
     }
@@ -64,6 +57,14 @@ public class Offer {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public String getPaymentBody() {
+        return paymentBody;
+    }
+
+    public void setPaymentBody(String paymentBody) {
+        this.paymentBody = paymentBody;
     }
 
     public String getCreditMonthValue() {

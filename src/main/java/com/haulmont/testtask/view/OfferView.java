@@ -25,6 +25,7 @@ public class OfferView extends VerticalLayout implements View {
     OfferService offerService = new OfferService(Config.getInstance());
 
     private Grid<Offer> offerGrid = new Grid<>(Offer.class);
+    private Grid<Schedule> scheduleGrid = new Grid<>(Schedule.class);
 
     private Button addBtn;
     private Button editBtn;
