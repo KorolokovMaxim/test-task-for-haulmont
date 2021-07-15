@@ -30,7 +30,7 @@ public class MainUI extends UI {
         HorizontalLayout headerLayout = new HorizontalLayout();
         headerLayout.setHeight("56px");
         headerLayout.setWidth("100%");
-        headerLayout.setMargin(false);
+        headerLayout.setMargin(true);
         headerLayout.setSpacing(true);
 
         Button bankButton = new Button("Банки", clickEvent -> getNavigator().navigateTo(BankView.NAME));
@@ -49,12 +49,8 @@ public class MainUI extends UI {
         offerButton.setHeight("100%");
         offerButton.addStyleName("borderless");
 
-        Label header = new Label("БАНКОКОМПАНИЯ");
-        header.setWidth(null);
 
-        headerLayout.addComponents(bankButton, clientButton, creditButton, offerButton, header);
-        headerLayout.setComponentAlignment(header, Alignment.MIDDLE_RIGHT);
-        headerLayout.setExpandRatio(header, 1f);
+        headerLayout.addComponents(bankButton, clientButton, creditButton, offerButton);
 
         VerticalLayout viewLayout = new VerticalLayout();
         viewLayout.setSizeFull();

@@ -29,7 +29,6 @@ public class OfferWindow extends Window {
     private TextField creditAmount;
     private DateField dateOffer;
     private TextField creditForMonth;
-    private TextField paymentBody;
 
 
     ClientService clientService = new ClientService(Config.getInstance());
@@ -117,19 +116,9 @@ public class OfferWindow extends Window {
                 .asRequired()
                 .bind(Offer::getCreditMonthValue, Offer::setCreditMonthValue);
 
-        paymentBody = new TextField("Сумма оплаты в месяц");
-        paymentBody.setMaxLength(8);
-        paymentBody.setWidth("100%");
-        paymentBody.setRequiredIndicatorVisible(true);
-        binder.forField(paymentBody)
-                .withValidator(s -> s != null && !s.isEmpty(), "Сумма не может быть пустой")
-                .withValidator(new RegexpValidator("Только цифры", "[0-9]+"))
-                .withValidator(s -> !s.equals("0"), "Не может быть 0")
-                .asRequired()
-                .bind(Offer::getPaymentBody, Offer::setPaymentBody);
 
 
-        formLayout.addComponents(clientsComboBox, creditsComboBox, creditAmount, dateOffer, creditForMonth , paymentBody);
+        formLayout.addComponents(clientsComboBox, creditsComboBox, creditAmount, dateOffer, creditForMonth);
 
         HorizontalLayout btnLayout = new HorizontalLayout();
         btnLayout.setSpacing(true);
@@ -200,11 +189,9 @@ public class OfferWindow extends Window {
                 offerToWrite.setCreditAmount(creditAmount.getValue());
                 offerToWrite.setDate(Date.from(dateOffer.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant()));
                 offerToWrite.setCreditMonthValue(creditForMonth.getValue());
-                offerToWrite.setPaymentBody(paymentBody.getValue());
                 OfferService offerService = new OfferService(Config.getInstance());
                 if (edit) {
                     if (Double.parseDouble(creditAmount.getValue()) > Double.parseDouble(creditService.findById(creditsComboBox.getValue()).getLimit())
-                            || Double.parseDouble(creditAmount.getValue()) < Double.parseDouble(paymentBody.getValue())
                     ) {
                         Notification.show("ОШИБКА",
                                 "Cумма выдаваемого кредита больше чем лимит по кредиту" +
@@ -217,7 +204,6 @@ public class OfferWindow extends Window {
                 } else {
 
                     if (Double.parseDouble(creditAmount.getValue()) > Double.parseDouble(creditService.findById(creditsComboBox.getValue()).getLimit())
-                    || Double.parseDouble(creditAmount.getValue()) < Double.parseDouble(paymentBody.getValue())
                     ) {
                         Notification.show("ОШИБКА",
                                 "Cумма выдаваемого кредита больше чем лимит по кредиту" +

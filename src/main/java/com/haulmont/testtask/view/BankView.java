@@ -5,10 +5,7 @@ import com.haulmont.testtask.entity.Bank;
 import com.haulmont.testtask.serivce.BankService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 
 import java.util.List;
 
@@ -31,9 +28,13 @@ public class BankView extends VerticalLayout implements View {
     }
 
     private void buildView() {
+
+        Label label = new Label("Банки");
+        label.setWidth("100%");
         bankGrid.removeAllColumns();
         bankGrid.addColumn(Bank::getName).setCaption("Название");
         bankGrid.setSizeFull();
+
 
         HorizontalLayout btnLayout = new HorizontalLayout();
 
@@ -47,7 +48,7 @@ public class BankView extends VerticalLayout implements View {
         setMargin(true);
         setSpacing(true);
         setSizeFull();
-        addComponents(bankGrid, btnLayout);
+        addComponents(label,bankGrid, btnLayout);
         setExpandRatio(bankGrid, 1f);
     }
 

@@ -31,6 +31,10 @@ public class ClientView extends VerticalLayout implements View {
     }
 
     private void buildView() {
+
+        Label label = new Label("Клиенты");
+        label.setWidth("100%");
+
         clientGrid.removeAllColumns();
         clientGrid.addColumn(Client::getFIO).setCaption("ФИО");
         clientGrid.addColumn(client -> bs.findById(client.getBankID()).getName()).setCaption("БАНК");
@@ -51,7 +55,7 @@ public class ClientView extends VerticalLayout implements View {
         setMargin(true);
         setSpacing(true);
         setSizeFull();
-        addComponents(clientGrid, btnLayout);
+        addComponents(label,clientGrid, btnLayout);
         setExpandRatio(clientGrid, 1f);
     }
 

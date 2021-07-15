@@ -6,10 +6,7 @@ import com.haulmont.testtask.serivce.BankService;
 import com.haulmont.testtask.serivce.CreditService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 
 import java.util.List;
 
@@ -33,6 +30,10 @@ public class CreditView extends VerticalLayout implements View {
     }
 
     private void buildView() {
+
+        Label label = new Label("Кредиты");
+        label.setWidth("100%");
+
         creditGrid.removeAllColumns();
         creditGrid.addColumn(Credit::getName).setCaption("Название кредита");
         creditGrid.addColumn(credit -> bs.findById(credit.getBankID()).getName()).setCaption("Банк кредитор");
@@ -49,7 +50,7 @@ public class CreditView extends VerticalLayout implements View {
         setMargin(true);
         setSpacing(true);
         setSizeFull();
-        addComponents(creditGrid, btnLayout);
+        addComponents(label,creditGrid, btnLayout);
         setExpandRatio(creditGrid, 1f);
 
     }

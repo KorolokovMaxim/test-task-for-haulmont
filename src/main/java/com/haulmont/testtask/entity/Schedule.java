@@ -5,37 +5,36 @@ import java.util.Objects;
 public class Schedule {
 
     private String datePayment;
-    private Double amountPaymentBody;
-    private Double amountPayment;
-    private Double amountPaymentPercent;
+    private String amountPaymentBody;
+    private String amountPayment;
+    private String amountPaymentPercent;
 
     public Schedule() {
     }
 
-    public Double getAmountPaymentBody() {
+    public String getAmountPaymentBody() {
         return amountPaymentBody;
     }
 
-    public void setAmountPaymentBody(Double amountPaymentBody) {
+    public void setAmountPaymentBody(String amountPaymentBody) {
         this.amountPaymentBody = amountPaymentBody;
     }
 
-    public Double getAmountPayment() {
+    public String getAmountPayment() {
         return amountPayment;
     }
 
-    public void setAmountPayment(Double amountPayment) {
+    public void setAmountPayment(String amountPayment) {
         this.amountPayment = amountPayment;
     }
 
-    public Double getAmountPaymentPercent() {
+    public String getAmountPaymentPercent() {
         return amountPaymentPercent;
     }
 
-    public void setAmountPaymentPercent(Double amountPaymentPercent) {
+    public void setAmountPaymentPercent(String amountPaymentPercent) {
         this.amountPaymentPercent = amountPaymentPercent;
     }
-
 
     public String getDatePayment() {
         return datePayment;

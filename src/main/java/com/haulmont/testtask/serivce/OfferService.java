@@ -1,16 +1,14 @@
 package com.haulmont.testtask.serivce;
 
 import com.haulmont.testtask.Config;
-import com.haulmont.testtask.dao.OfferDAO;
-import com.haulmont.testtask.entity.Client;
-import com.haulmont.testtask.entity.Credit;
+import com.haulmont.testtask.dao.CrudDAO;
 import com.haulmont.testtask.entity.Offer;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class OfferService implements OfferDAO {
+public class OfferService implements CrudDAO<Offer, String> {
 
     private final Connection db;
 
@@ -21,7 +19,7 @@ public class OfferService implements OfferDAO {
     @Override
     public void createOne(Offer offer) {
 
-        String sql = "INSERT INTO OFFER (ID, CLIENT_ID, CREDIT_ID, CREDIT_AMOUNT, DATE_IN_OFFER, CREDIT_MONTH_VALUE, PAYMANT_BODY_MOUNTH) values (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO OFFER (ID, CLIENT_ID, CREDIT_ID, CREDIT_AMOUNT, DATE_IN_OFFER, CREDIT_MONTH_VALUE) values (?, ?, ?, ?, ?, ?)";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             ps.setString(1, offer.getId());
             ps.setString(2, offer.getClientID());
@@ -53,7 +51,6 @@ public class OfferService implements OfferDAO {
                 offer.setCreditAmount(rs.getString("CREDIT_AMOUNT"));
                 offer.setDate(rs.getDate("DATE_IN_OFFER"));
                 offer.setCreditMonthValue(rs.getString("CREDIT_MONTH_VALUE"));
-                offer.setPaymentBody(rs.getString("PAYMANT_BODY_MOUNTH"));
                 offerList.add(offer);
             }
         } catch (SQLException e) {
@@ -77,7 +74,6 @@ public class OfferService implements OfferDAO {
                 offer.setCreditAmount(rs.getString("CREDIT_AMOUNT"));
                 offer.setDate(rs.getDate("DATE_IN_OFFER"));
                 offer.setCreditMonthValue("CREDIT_MONTH_VALUE");
-                offer.setPaymentBody("PAYMANT_BODY_MOUNTH");
             } else {
                 throw new IllegalArgumentException(Offer.class.getSimpleName() + " Error: findById");
             }
@@ -97,7 +93,7 @@ public class OfferService implements OfferDAO {
 
     @Override
     public void updateOne(Offer offer) {
-        String sql = "UPDATE OFFER SET CLIENT_ID = ?, CREDIT_ID = ?, CREDIT_AMOUNT = ?, DATE_IN_OFFER = ?, CREDIT_MONTH_VALUE = ?, PAYMANT_BODY_MOUNTH = ? WHERE ID = ?";
+        String sql = "UPDATE OFFER SET CLIENT_ID = ?, CREDIT_ID = ?, CREDIT_AMOUNT = ?, DATE_IN_OFFER = ?, CREDIT_MONTH_VALUE = ? WHERE ID = ?";
         try (PreparedStatement ps = db.prepareStatement(sql)) {
             ps.setString(1, offer.getClientID());
             ps.setString(2, offer.getCreditID());
@@ -106,8 +102,7 @@ public class OfferService implements OfferDAO {
             if (offer.getDate() != null) updateDate = new Date(offer.getDate().getTime());
             ps.setDate(4, updateDate);
             ps.setString(5, offer.getCreditMonthValue());
-            ps.setString(6, offer.getPaymentBody());
-            ps.setString(7, offer.getId());
+            ps.setString(6, offer.getId());
             if (ps.executeUpdate() != 1) {
                 throw new IllegalArgumentException(Offer.class.getSimpleName() + " Error: updateOne");
             }
@@ -130,66 +125,66 @@ public class OfferService implements OfferDAO {
         }
     }
 
-    @Override
-    public String getClient(String id) {
-        ResultSet rs = null;
-        Client client = new Client();
-        String sql = "SELECT * FROM CLIENT WHERE id = ?";
-        try (PreparedStatement pstmt = db.prepareStatement(sql)) {
-            pstmt.setString(1, id);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                client.setId(rs.getString("ID"));
-                client.setFIO(rs.getString("FIO"));
-                client.setBankID(rs.getString("BANK_ID"));
-                client.setPhoneNumber(rs.getString("PHONE_NUMBER"));
-                client.setEmail(rs.getString("EMAIL"));
-                client.setPassport(rs.getString("PASSPORT"));
-
-            } else {
-                throw new IllegalArgumentException(Client.class.getSimpleName() + " Error: findById");
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return client.getFIO();
-    }
-
-    @Override
-    public String getCredit(String id) {
-        ResultSet rs = null;
-        Credit credit = new Credit();
-        String sql = "SELECT * FROM CLIENT WHERE id = ?";
-        try (PreparedStatement pstmt = db.prepareStatement(sql)) {
-            pstmt.setString(1, id);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                credit.setId(rs.getString("ID"));
-                credit.setName(rs.getString("NAME"));
-                credit.setBankID(rs.getString("BANK_ID"));
-                credit.setLimit(rs.getString("LIMIT"));
-                credit.setInterestRate(rs.getString("INTEREST_RATE"));
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return credit.getName();
-    }
+//    @Override
+//    public String getClient(String id) {
+//        ResultSet rs = null;
+//        Client client = new Client();
+//        String sql = "SELECT * FROM CLIENT WHERE id = ?";
+//        try (PreparedStatement pstmt = db.prepareStatement(sql)) {
+//            pstmt.setString(1, id);
+//            rs = pstmt.executeQuery();
+//            if (rs.next()) {
+//                client.setId(rs.getString("ID"));
+//                client.setFIO(rs.getString("FIO"));
+//                client.setBankID(rs.getString("BANK_ID"));
+//                client.setPhoneNumber(rs.getString("PHONE_NUMBER"));
+//                client.setEmail(rs.getString("EMAIL"));
+//                client.setPassport(rs.getString("PASSPORT"));
+//
+//            } else {
+//                throw new IllegalArgumentException(Client.class.getSimpleName() + " Error: findById");
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return client.getFIO();
+//    }
+//
+//    @Override
+//    public String getCredit(String id) {
+//        ResultSet rs = null;
+//        Credit credit = new Credit();
+//        String sql = "SELECT * FROM CLIENT WHERE id = ?";
+//        try (PreparedStatement pstmt = db.prepareStatement(sql)) {
+//            pstmt.setString(1, id);
+//            rs = pstmt.executeQuery();
+//            if (rs.next()) {
+//                credit.setId(rs.getString("ID"));
+//                credit.setName(rs.getString("NAME"));
+//                credit.setBankID(rs.getString("BANK_ID"));
+//                credit.setLimit(rs.getString("LIMIT"));
+//                credit.setInterestRate(rs.getString("INTEREST_RATE"));
+//
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return credit.getName();
+//    }
 }

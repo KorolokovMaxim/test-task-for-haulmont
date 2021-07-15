@@ -1,8 +1,8 @@
 package com.haulmont.testtask.serivce;
 
 import com.haulmont.testtask.Config;
-import com.haulmont.testtask.dao.BankDAO;
 
+import com.haulmont.testtask.dao.CrudDAO;
 import com.haulmont.testtask.entity.Bank;
 
 
@@ -10,7 +10,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BankService implements BankDAO {
+public class BankService implements CrudDAO<Bank, String> {
 
     private final Connection db;
 

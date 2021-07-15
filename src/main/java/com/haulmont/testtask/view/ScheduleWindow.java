@@ -7,15 +7,12 @@ import com.haulmont.testtask.serivce.CreditService;
 import com.vaadin.ui.*;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.*;
 
 public class ScheduleWindow extends Window {
 
-    private Grid<Schedule> scheduleGrid = new Grid<>(Schedule.class);
     private Button cancel;
-    private static Offer offer;
+    private Offer offer;
     static CreditService cs = new CreditService(Config.getInstance());
 
 
@@ -53,23 +50,31 @@ public class ScheduleWindow extends Window {
         Double percent = paymentBody * (getCreditPercent / 100);
         Double resultPayment = paymentBody + percent;
 
+        String resultPaymentString = String.format("%.2f", resultPayment);
+        String paymentBodyString = String.format("%.2f", paymentBody);
+        String percentString = String.format("%.2f", percent);
+
 
         List<Schedule> schedules = new ArrayList<>();
 
+
         for (int i = 1; i < index + 1; i++) {
             Schedule schedule = new Schedule();
-            schedule.setDatePayment(datePayment(offer.getDate() , i));
-            System.out.println(i);
-            System.out.println(offer.getDate().toString());
-            schedule.setAmountPayment(resultPayment);
-            schedule.setAmountPaymentBody(paymentBody);
-            schedule.setAmountPaymentPercent(percent);
+            schedule.setDatePayment(datePayment(offer.getDate(), i));
+            schedule.setAmountPayment(resultPaymentString);
+            schedule.setAmountPaymentBody(paymentBodyString);
+            schedule.setAmountPaymentPercent(percentString);
             schedules.add(schedule);
 
         }
 
+        Grid<Schedule> scheduleGrid = new Grid<>(Schedule.class);
 
-
+        scheduleGrid.removeAllColumns();
+        scheduleGrid.addColumn(Schedule::getDatePayment).setCaption("Дата выплаты");
+        scheduleGrid.addColumn(Schedule::getAmountPayment).setCaption("Сумма выплаты");
+        scheduleGrid.addColumn(Schedule::getAmountPaymentBody).setCaption("Тело платежа");
+        scheduleGrid.addColumn(Schedule::getAmountPaymentPercent).setCaption("Процент платежа");
         scheduleGrid.setItems(schedules);
         scheduleGrid.setSizeFull();
 
@@ -89,7 +94,7 @@ public class ScheduleWindow extends Window {
 
     }
 
-    private String datePayment(Date date , int i){
+    private String datePayment(Date date, int i) {
         Calendar cal = GregorianCalendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
@@ -100,11 +105,10 @@ public class ScheduleWindow extends Window {
         String currentMonthAsSting = df.format(cal.getTime());
 
         // Add next month
-        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH)+i);
+        cal.set(Calendar.MONTH, cal.get(Calendar.MONTH) + i);
         String nextMonthAsString = df.format(cal.getTime());
         return nextMonthAsString;
     }
-
 
 
 }

@@ -1,15 +1,14 @@
 package com.haulmont.testtask.serivce;
 
 import com.haulmont.testtask.Config;
-import com.haulmont.testtask.dao.CreditDAO;
-import com.haulmont.testtask.entity.Bank;
+import com.haulmont.testtask.dao.CrudDAO;
 import com.haulmont.testtask.entity.Credit;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreditService implements CreditDAO {
+public class CreditService implements CrudDAO<Credit,String> {
 
     private final Connection db;
 
@@ -115,30 +114,30 @@ public class CreditService implements CreditDAO {
         }
     }
 
-    @Override
-    public String getBank(String id) {
-        ResultSet rs = null;
-        Bank bank = new Bank();
-        String sql = "SELECT ID, NAME FROM BANK WHERE id = ?";
-        try (PreparedStatement pstmt = db.prepareStatement(sql)) {
-            pstmt.setString(1, id);
-            rs = pstmt.executeQuery();
-            if (rs.next()) {
-                bank.setId(rs.getString("ID"));
-                bank.setName(rs.getString("NAME"));
-
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (rs != null) {
-                    rs.close();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-        return bank.getName();
-    }
+//    @Override
+//    public String getBank(String id) {
+//        ResultSet rs = null;
+//        Bank bank = new Bank();
+//        String sql = "SELECT ID, NAME FROM BANK WHERE id = ?";
+//        try (PreparedStatement pstmt = db.prepareStatement(sql)) {
+//            pstmt.setString(1, id);
+//            rs = pstmt.executeQuery();
+//            if (rs.next()) {
+//                bank.setId(rs.getString("ID"));
+//                bank.setName(rs.getString("NAME"));
+//
+//            }
+//        } catch (SQLException e) {
+//            e.printStackTrace();
+//        } finally {
+//            try {
+//                if (rs != null) {
+//                    rs.close();
+//                }
+//            } catch (SQLException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        return bank.getName();
+//    }
 }

@@ -8,10 +8,7 @@ import com.haulmont.testtask.serivce.CreditService;
 import com.haulmont.testtask.serivce.OfferService;
 import com.vaadin.navigator.View;
 import com.vaadin.navigator.ViewChangeListener;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 
 import java.util.List;
 
@@ -39,13 +36,16 @@ public class OfferView extends VerticalLayout implements View {
     }
 
     private void buildView() {
+
+        Label label = new Label("Кредитные предложения");
+        label.setWidth("100%");
+
         offerGrid.removeAllColumns();
         offerGrid.addColumn(offer -> clientService.findById(offer.getClientID()).getFIO()).setCaption("Ф.И.О Клиента");
         offerGrid.addColumn(offer -> creditService.findById(offer.getCreditID()).getName()).setCaption("Название кредита");
         offerGrid.addColumn(Offer::getCreditAmount).setCaption("Сумма кредита");
         offerGrid.addColumn(Offer::getDate).setCaption("Дата взятие кредита");
         offerGrid.addColumn(Offer::getCreditMonthValue).setCaption("Срок кредита (в месяцах)");
-        offerGrid.addColumn(Offer::getPaymentBody).setCaption("Сумма платежа в месяц");
         offerGrid.setSizeFull();
 
         HorizontalLayout btnLayout = new HorizontalLayout();
@@ -58,7 +58,7 @@ public class OfferView extends VerticalLayout implements View {
         setMargin(true);
         setSpacing(true);
         setSizeFull();
-        addComponents(offerGrid, btnLayout);
+        addComponents(label,offerGrid, btnLayout);
         setExpandRatio(offerGrid, 1f);
 
     }
@@ -80,8 +80,13 @@ public class OfferView extends VerticalLayout implements View {
         editBtn.addClickListener(clickEvent ->
                 getUI().addWindow(new OfferWindow(offerGrid, true)));
 
-        scheduleBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new ScheduleWindow(offerGrid.asSingleSelect().getValue())));
+        scheduleBtn.addClickListener(clickEvent -> {
+                    if (!offerGrid.asSingleSelect().isEmpty()) {
+                        getUI().addWindow(new ScheduleWindow(offerGrid.asSingleSelect().getValue()));
+                    }
+                });
+
+
 
         deleteBtn.addClickListener(clickEvent -> {
             if (!offerGrid.asSingleSelect().isEmpty()) {
