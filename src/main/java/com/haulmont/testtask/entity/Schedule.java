@@ -8,8 +8,18 @@ public class Schedule {
     private String amountPaymentBody;
     private String amountPayment;
     private String amountPaymentPercent;
+    private String totalPayments;
+
 
     public Schedule() {
+    }
+
+    public String getTotalPayments() {
+        return totalPayments;
+    }
+
+    public void setTotalPayments(String totalPayments) {
+        this.totalPayments = totalPayments;
     }
 
     public String getAmountPaymentBody() {

@@ -49,10 +49,12 @@ public class ScheduleWindow extends Window {
         Double paymentBody = creditSUm / index;
         Double percent = paymentBody * (getCreditPercent / 100);
         Double resultPayment = paymentBody + percent;
+        Double total = creditSUm + (percent * index);
 
         String resultPaymentString = String.format("%.2f", resultPayment);
         String paymentBodyString = String.format("%.2f", paymentBody);
         String percentString = String.format("%.2f", percent);
+        String totalString = String.format("%.2f", total);
 
 
         List<Schedule> schedules = new ArrayList<>();
@@ -78,6 +80,10 @@ public class ScheduleWindow extends Window {
         scheduleGrid.setItems(schedules);
         scheduleGrid.setSizeFull();
 
+
+        Label totalSum = new Label("ИТОГОВАЯ СУММА = " +  totalString);
+        totalSum.setWidth("100%");
+
         HorizontalLayout btnLayout = new HorizontalLayout();
         btnLayout.setSpacing(true);
         cancel = new Button("CANCEL");
@@ -86,7 +92,7 @@ public class ScheduleWindow extends Window {
 
         horizontalLayout.addComponents(scheduleGrid, btnLayout);
 
-        layout.addComponents(horizontalLayout, btnLayout);
+        layout.addComponents(horizontalLayout,totalSum, btnLayout);
         layout.setExpandRatio(horizontalLayout, 1f);
         layout.setComponentAlignment(btnLayout, Alignment.BOTTOM_CENTER);
         setContent(layout);
