@@ -50,6 +50,8 @@ public class ClientView extends VerticalLayout implements View {
         addBtn = new Button("ADD");
         editBtn = new Button("EDIT");
         deleteBtn = new Button("DELETE");
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
 
         btnLayout.addComponents(addBtn, editBtn, deleteBtn);
         setMargin(true);
@@ -60,30 +62,34 @@ public class ClientView extends VerticalLayout implements View {
     }
 
     private void setupListeners() {
-        clientGrid.addSelectionListener(valueChangerEvent -> {
+        try {
+            clientGrid.addSelectionListener(valueChangerEvent -> {
+                if (!clientGrid.asSingleSelect().isEmpty()) {
+                    editBtn.setEnabled(true);
+                    deleteBtn.setEnabled(true);
+                } else {
+                    editBtn.setEnabled(false);
+                    deleteBtn.setEnabled(false);
+                }
 
-            if (!clientGrid.asSingleSelect().isEmpty()) {
-                editBtn.setEnabled(true);
-                deleteBtn.setEnabled(true);
-            } else {
-                editBtn.setEnabled(false);
-                deleteBtn.setEnabled(false);
-            }
+            });
 
-        });
+            addBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new ClientWindow(clientGrid, false)));
 
-        addBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new ClientWindow(clientGrid, false)));
+            editBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new ClientWindow(clientGrid, true)));
 
-        editBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new ClientWindow(clientGrid, true)));
+            deleteBtn.addClickListener(clickEvent -> {
+                if (!clientGrid.asSingleSelect().isEmpty()) {
+                    cs.deleteOne(clientGrid.asSingleSelect().getValue());
+                    updateGrid();
+                }
+            });
 
-        deleteBtn.addClickListener(clickEvent -> {
-            if (!clientGrid.asSingleSelect().isEmpty()) {
-                cs.deleteOne(clientGrid.asSingleSelect().getValue());
-                updateGrid();
-            }
-        });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
     }
 

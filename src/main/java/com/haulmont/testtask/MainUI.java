@@ -49,12 +49,11 @@ public class MainUI extends UI {
         offerButton.setHeight("100%");
         offerButton.addStyleName("borderless");
 
-
         headerLayout.addComponents(bankButton, clientButton, creditButton, offerButton);
 
         VerticalLayout viewLayout = new VerticalLayout();
         viewLayout.setSizeFull();
-        viewLayout.setMargin(false);
+        viewLayout.setMargin(true);
         viewLayout.setSpacing(true);
 
         layout.addComponents(headerLayout, viewLayout);
@@ -66,7 +65,6 @@ public class MainUI extends UI {
         navigator.addView(ClientView.NAME, new ClientView());
         navigator.addView(CreditView.NAME, new CreditView());
         navigator.addView(OfferView.NAME , new OfferView());
-
 
         headerLayout.setStyleName("header-layout");
 

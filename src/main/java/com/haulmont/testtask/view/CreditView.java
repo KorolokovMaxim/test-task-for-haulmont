@@ -45,6 +45,8 @@ public class CreditView extends VerticalLayout implements View {
         addBtn = new Button("ADD");
         editBtn = new Button("EDIT");
         deleteBtn = new Button("DELETE");
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
 
         btnLayout.addComponents(addBtn, editBtn, deleteBtn);
         setMargin(true);
@@ -56,28 +58,33 @@ public class CreditView extends VerticalLayout implements View {
     }
 
     private void setupListeners() {
-        creditGrid.addSelectionListener(selectionEvent -> {
-            if (!creditGrid.asSingleSelect().isEmpty()) {
-                editBtn.setEnabled(true);
-                deleteBtn.setEnabled(true);
-            } else {
-                editBtn.setEnabled(false);
-                deleteBtn.setEnabled(false);
-            }
-        });
+        try {
+            creditGrid.addSelectionListener(selectionEvent -> {
+                if (!creditGrid.asSingleSelect().isEmpty()) {
+                    editBtn.setEnabled(true);
+                    deleteBtn.setEnabled(true);
+                } else {
+                    editBtn.setEnabled(false);
+                    deleteBtn.setEnabled(false);
+                }
+            });
 
-        addBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new CreditWindow(creditGrid, false)));
+            addBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new CreditWindow(creditGrid, false)));
 
-        editBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new CreditWindow(creditGrid, true)));
+            editBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new CreditWindow(creditGrid, true)));
 
-        deleteBtn.addClickListener(clickEvent -> {
-            if (!creditGrid.asSingleSelect().isEmpty()) {
-                creditService.deleteOne(creditGrid.asSingleSelect().getValue());
-                updateGrid();
-            }
-        });
+            deleteBtn.addClickListener(clickEvent -> {
+                if (!creditGrid.asSingleSelect().isEmpty()) {
+                    creditService.deleteOne(creditGrid.asSingleSelect().getValue());
+                    updateGrid();
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     private void updateGrid() {

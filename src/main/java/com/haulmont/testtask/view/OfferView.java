@@ -53,6 +53,9 @@ public class OfferView extends VerticalLayout implements View {
         editBtn = new Button("EDIT");
         deleteBtn = new Button("DELETE");
         scheduleBtn = new Button("Посмотреть график платежей");
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
+
 
         btnLayout.addComponents(addBtn, editBtn, deleteBtn ,scheduleBtn);
         setMargin(true);
@@ -64,36 +67,43 @@ public class OfferView extends VerticalLayout implements View {
     }
 
     private void setupListeners() {
-        offerGrid.addSelectionListener(selectionEvent -> {
-            if (!offerGrid.asSingleSelect().isEmpty()) {
-                editBtn.setEnabled(true);
-                deleteBtn.setEnabled(true);
-            } else {
-                editBtn.setEnabled(false);
-                deleteBtn.setEnabled(false);
-            }
-        });
+        try {
+            offerGrid.addSelectionListener(selectionEvent -> {
+                if (!offerGrid.asSingleSelect().isEmpty()) {
+                    editBtn.setEnabled(true);
+                    deleteBtn.setEnabled(true);
+                } else {
+                    editBtn.setEnabled(false);
+                    deleteBtn.setEnabled(false);
+                }
+            });
 
-        addBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new OfferWindow(offerGrid, false)));
+            addBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new OfferWindow(offerGrid, false)));
 
-        editBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new OfferWindow(offerGrid, true)));
+            editBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new OfferWindow(offerGrid, true)));
 
-        scheduleBtn.addClickListener(clickEvent -> {
-                    if (!offerGrid.asSingleSelect().isEmpty()) {
-                        getUI().addWindow(new ScheduleWindow(offerGrid.asSingleSelect().getValue()));
-                    }
-                });
+            scheduleBtn.addClickListener(clickEvent -> {
+                if (!offerGrid.asSingleSelect().isEmpty()) {
+                    getUI().addWindow(new ScheduleWindow(offerGrid.asSingleSelect().getValue()));
+                }
+            });
+
+
+            deleteBtn.addClickListener(clickEvent -> {
+                if (!offerGrid.asSingleSelect().isEmpty()) {
+                    offerService.deleteOne(offerGrid.asSingleSelect().getValue());
+                    updateGrid();
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
 
-        deleteBtn.addClickListener(clickEvent -> {
-            if (!offerGrid.asSingleSelect().isEmpty()) {
-                offerService.deleteOne(offerGrid.asSingleSelect().getValue());
-                updateGrid();
-            }
-        });
+
     }
 
     private void updateGrid() {

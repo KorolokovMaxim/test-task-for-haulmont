@@ -43,6 +43,8 @@ public class BankView extends VerticalLayout implements View {
         addBtn = new Button("ADD");
         editBtn = new Button("EDIT");
         deleteBtn = new Button("DELETE");
+        editBtn.setEnabled(false);
+        deleteBtn.setEnabled(false);
 
         btnLayout.addComponents(addBtn, editBtn, deleteBtn);
         setMargin(true);
@@ -54,30 +56,35 @@ public class BankView extends VerticalLayout implements View {
 
 
     private void setupListeners() {
-        bankGrid.addSelectionListener(valueChangerEvent -> {
+        try {
+            bankGrid.addSelectionListener(valueChangerEvent -> {
+                if (!bankGrid.asSingleSelect().isEmpty()) {
+                    editBtn.setEnabled(true);
+                    deleteBtn.setEnabled(true);
+                } else {
+                    editBtn.setEnabled(false);
+                    deleteBtn.setEnabled(false);
+                }
 
-            if (!bankGrid.asSingleSelect().isEmpty()) {
-                editBtn.setEnabled(true);
-                deleteBtn.setEnabled(true);
-            } else {
-                editBtn.setEnabled(false);
-                deleteBtn.setEnabled(false);
-            }
+            });
 
-        });
+            addBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new BankWindow(bankGrid, false)));
 
-        addBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new BankWindow(bankGrid, false)));
+            editBtn.addClickListener(clickEvent ->
+                    getUI().addWindow(new BankWindow(bankGrid, true)));
 
-        editBtn.addClickListener(clickEvent ->
-                getUI().addWindow(new BankWindow(bankGrid, true)));
+            deleteBtn.addClickListener(clickEvent -> {
+                if (!bankGrid.asSingleSelect().isEmpty()) {
+                    bs.deleteOne(bankGrid.asSingleSelect().getValue());
+                    updateGrid();
+                }
+            });
 
-        deleteBtn.addClickListener(clickEvent -> {
-            if (!bankGrid.asSingleSelect().isEmpty()) {
-                bs.deleteOne(bankGrid.asSingleSelect().getValue());
-                updateGrid();
-            }
-        });
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
 
     }
 
